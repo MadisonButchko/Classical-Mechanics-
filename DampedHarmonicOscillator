@@ -1,0 +1,40 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+
+# Define parameters for the system
+m = 1.0  # mass (kg)
+c = 0.5  # damping coefficient (kg/s)
+k = 2.0  # spring constant (N/m)
+
+# Define the system of differential equations
+def damped_harmonic_oscillator(t, y):
+    x, v = y
+    dxdt = v
+    dvdt = -(c/m) * v - (k/m) * x
+    return [dxdt, dvdt]
+
+# Initial conditions: initial displacement and initial velocity
+x0 = 1.0  # initial displacement (m)
+v0 = 0.0  # initial velocity (m/s)
+
+# Time span for the simulation
+t_span = (0, 20)  # simulate from t=0 to t=20 seconds
+t_eval = np.linspace(0, 20, 500)  # time points to evaluate solution
+
+# Solve the system using a numerical solver
+solution = solve_ivp(damped_harmonic_oscillator, t_span, [x0, v0], t_eval=t_eval)
+
+# Extract the displacement (x) and time (t)
+x = solution.y[0]
+t = solution.t
+
+# Plot the solution
+plt.figure(figsize=(8, 5))
+plt.plot(t, x, label='Damped Oscillator', color='b')
+plt.title('Damped Harmonic Oscillator')
+plt.xlabel('Time (s)')
+plt.ylabel('Displacement (m)')
+plt.grid(True)
+plt.legend()
+plt.show()
